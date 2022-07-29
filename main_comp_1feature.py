@@ -132,26 +132,56 @@ def compute_features_on_windows(root, file, w_len, overlap, band, target_name,fi
 
 if __name__ == '__main__':
     ##### PARAMETERS #####
-    directory = './datasets/SA010_low_freqs'
+    directory = './datasets/whole_data'
     fromat_type = 'set'
     file_target_score = {'day1_':96, 'day2_':93, 'day3_':84, 'day4_':82, 'day5_':85, 'day6_':93,
                         'day7_':98, 'day9_':91, 'day11':98, 'day13':95}
+    file_target_score = {'SA007_day0_': 75, 'SA007_day1_': 82, 'SA007_day2_': 78, 'SA007_day3_': 82, 'SA007_day4_': 77,
+                         'SA007_day5_': 72,
+                         'SA007_day6_': 78, 'SA007_day7_': 75, 'SA007_day8_': 78, 'SA010_day1_': 85, 'SA010_day3_': 100,
+                         'SA010_day5_': 84,
+                         'SA010_day6_': 83, 'SA010_day7_': 77, 'SA010_day9_': 74, 'SA010_day11': 81, 'SA010_day12': 74,
+                         'SA010_day13': 71,
+                         'SA014_day1_': 79, 'SA014_day2_': 83, 'SA014_day3_': 84, 'SA014_day5_': 71, 'SA014_day6_': 73,
+                         'SA014_day7_': 81,
+                         'SA014_day9_': 117, 'SA017_day1_': 89, 'SA017_day2_': 76, 'SA017_day4_': 74, 'SA017_day6_': 74,
+                         'SA017_day7_': 75,
+                         'SA017_day8_': 76, 'SA047_day1_': 96, 'SA047_day2_': 93, 'SA047_day3_': 84, 'SA047_day4_': 82,
+                         'SA047_day5_': 85,
+                         'SA047_day6_': 93, 'SA047_day7_': 98, 'SA047_day9_': 91, 'SA047_day13': 95}
+    # REVIEWED (check)
     target_name = 'PANSS'
     file_target_score2 = {'day1_': 26, 'day2_': 21, 'day3_': 21, 'day4_': 20, 'day5_': 25, 'day6_': 24,
                          'day7_': 27, 'day9_': 25, 'day11': 26, 'day13': 26}
+    file_target_score2 = {'SA007_day0_': 29, 'SA007_day1_': 28, 'SA007_day2_': 25, 'SA007_day3_': 22, 'SA007_day4_': 22,
+                          'SA007_day5_': 21,
+                          'SA007_day6_': 21, 'SA007_day7_': 25, 'SA007_day8_': 23, 'SA010_day1_': 33, 'SA010_day3_': 36,
+                          'SA010_day5_': 35,
+                          'SA010_day6_': 35, 'SA010_day7_': 33, 'SA010_day9_': 30, 'SA010_day11': 30, 'SA010_day12': 28,
+                          'SA010_day13': 27,
+                          'SA014_day1_': 28, 'SA014_day2_': 29, 'SA014_day3_': 30, 'SA014_day5_': 28, 'SA014_day6_': 30,
+                          'SA014_day7_': 29,
+                          'SA014_day9_': 39, 'SA017_day1_': 26, 'SA017_day2_': 25, 'SA017_day4_': 26, 'SA017_day6_': 26,
+                          'SA017_day7_': 26,
+                          'SA017_day8_': 27, 'SA047_day1_': 26, 'SA047_day2_': 21, 'SA047_day3_': 21, 'SA047_day4_': 20,
+                          'SA047_day5_': 25,
+                          'SA047_day6_': 24, 'SA047_day7_': 27, 'SA047_day9_': 25, 'SA047_day13': 26}
+    # REVIEWED (check)
     target_name2 = 'PANSS_posit'
-    w_len = 0.5
-    overlap = 0.8
+    w_len = 60
+    overlap = 0.5
     ######################
     n_w = 0
     all_windows_metrics_condensed = list()
+    n_windows_per_record = []
+    record_names = []
     for root, folders, _ in os.walk(directory):
         i = 0
         for fold_day in sorted(folders):
             print('==============================Processing record of ' + str(fold_day[6:11]) + '==============================')
             i += 1
-            file_PANSS = file_target_score[fold_day[6:11]]
-            file_PANSS2 = file_target_score2[fold_day[6:11]]
+            file_PANSS = file_target_score[fold_day[:11]]
+            file_PANSS2 = file_target_score2[fold_day[:11]]
             all_windows_all_bands_metrics = list()  # len of 5 (Alpha(19),  Complete(7), Delta(15), Theta(15), Gamma(5))
             #############################
             ############################
@@ -171,9 +201,16 @@ if __name__ == '__main__':
             for win_m in all_windows_all_bands_metrics[0]:
                 all_windows_metrics_condensed.append(win_m)
             n_w += n_windows
+            n_windows_per_record.append(n_windows)
+            record_names.append(fold_day)
 
     df_all_windows_metrics = pd.DataFrame(all_windows_metrics_condensed)
     print('A total of {} windows have been obtained.'.format(n_w))
     df_all_windows_metrics.to_csv(
         './{}_selected_features_{}_{}_onlyIAF.csv'.format(directory.split('/')[-1][:5], directory.split('/')[-1][6:],
                                                   str(w_len) + 'sec'))
+    with open('./{}_n_windows_{}_{}.txt'.format(directory.split('/')[-1][:5], directory.split('/')[-1][6:],
+                                                  str(w_len) + 'sec'), 'w') as f:
+        for i_ in range(len(n_windows_per_record)):
+            f.write('{},{}\n'.format(record_names[i_], n_windows_per_record[i_]))
+    f.close()

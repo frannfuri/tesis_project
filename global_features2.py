@@ -5,10 +5,10 @@ from utils import MAD
 import scipy.stats
 
 if __name__ == '__main__':
-    f_analysis = 'kurt_Theta'
-    path_csv = 'results_bef_13-07/whole_selected_features_data_30sec_standard.csv'
+    f_analysis = 'LZC_median'
+    path_csv = './whole_features_data_0.5sec.csv'
 
-    discrim_f = 'PANSS_posit'
+    discrim_f = 'PANSS'
     ######################
     df = pd.read_csv(path_csv, index_col=0)
     min_val = min(df[f_analysis])

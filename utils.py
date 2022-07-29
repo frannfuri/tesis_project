@@ -33,3 +33,10 @@ def minmax_norm(data):
             norm_val = (i - mindata)/(maxdata - mindata)
             norm_data.append(norm_val)
     return np.array(norm_data)
+
+def value(x):
+    if isinstance(x, tuple):
+        if len(x)>1:
+            raise AssertionError('Error! Value is a tuple.')
+        x = x[0]
+    return x

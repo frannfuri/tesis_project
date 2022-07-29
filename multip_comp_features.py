@@ -30,7 +30,7 @@ def compute_features_on_windows(root, file, w_len, overlap, band, target_name,fi
             # Subject name
             window_metrics['SUBJ'] = file[:5]
             # LZC METRICS
-            a, b, c, d, e, f, g = zip(*pool.map(KC_complexity_lempelziv_count, [numpy_to_str_sequence(median_bin(sliding_windows[w_i, :])),
+            a, b, c, d, e, f, g = zip(pool.map(KC_complexity_lempelziv_count, [numpy_to_str_sequence(median_bin(sliding_windows[w_i, :])),
                                                                                 numpy_to_str_sequence(mean_bin(sliding_windows[w_i, :])),
                                                                                 numpy_to_str_sequence(hilbert_envelop_bin(sliding_windows[w_i, :])),
                                                                                 numpy_to_str_sequence(hilbert_power_bin(sliding_windows[w_i, :])),
@@ -57,22 +57,33 @@ def compute_features_on_windows(root, file, w_len, overlap, band, target_name,fi
         elif band == 'Gamma':
             window_metrics = OrderedDict()
             window_metrics['SUBJ'] = file[:5]
-            # LZC METRICS
+            a, b, c, d, e, f, g = zip(
+                pool.map(KC_complexity_lempelziv_count, [numpy_to_str_sequence(median_bin(sliding_windows[w_i, :])),
+                                                          numpy_to_str_sequence(mean_bin(sliding_windows[w_i, :])),
+                                                          numpy_to_str_sequence(
+                                                              hilbert_envelop_bin(sliding_windows[w_i, :])),
+                                                          numpy_to_str_sequence(
+                                                              hilbert_power_bin(sliding_windows[w_i, :])),
+                                                          numpy_to_str_sequence(
+                                                              slope_sign_bin(sliding_windows[w_i, :])),
+                                                          numpy_to_str_sequence(
+                                                              slope_hilb_envelop_bin(sliding_windows[w_i, :])),
+                                                          numpy_to_str_sequence(
+                                                              slope_hilb_power_bin(sliding_windows[w_i, :]))]))
+            #       Median
+            window_metrics['LZC_median_' + str(band)] = a
+            #       Mean
+            window_metrics['LZC_mean_' + str(band)] = b
             #       Hilbert envelop
-            sequence = numpy_to_str_sequence(hilbert_envelop_bin(sliding_windows[w_i, :]))
-            window_metrics['LZC_H-env_' + str(band)] = KC_complexity_lempelziv_count(sequence)
+            window_metrics['LZC_H-env_' + str(band)] = c
             #       Hilbert power
-            sequence = numpy_to_str_sequence(hilbert_power_bin(sliding_windows[w_i, :]))
-            window_metrics['LZC_H-pow_' + str(band)] = KC_complexity_lempelziv_count(sequence)
+            window_metrics['LZC_H-pow_' + str(band)] = d
             #       Slope sign
-            sequence = numpy_to_str_sequence(slope_sign_bin(sliding_windows[w_i, :]))
-            window_metrics['LZC_slope_' + str(band)] = KC_complexity_lempelziv_count(sequence)
+            window_metrics['LZC_slope_' + str(band)] = e
             #       Slope Hilbert env
-            sequence = numpy_to_str_sequence(slope_hilb_envelop_bin(sliding_windows[w_i, :]))
-            window_metrics['LZC_slope_H-env_' + str(band)] = KC_complexity_lempelziv_count(sequence)
+            window_metrics['LZC_slope_H-env_' + str(band)] = f
             #       Slope Hilbert pow
-            sequence = numpy_to_str_sequence(slope_hilb_power_bin(sliding_windows[w_i, :]))
-            window_metrics['LZC_slope_H-pow_' + str(band)] = KC_complexity_lempelziv_count(sequence)
+            window_metrics['LZC_slope_H-pow_' + str(band)] = g
             window_metrics[target_name] = file_target_score
             window_metrics[target_name2] = file_target_score2
             band_windows_metrics.append(window_metrics)
@@ -80,27 +91,33 @@ def compute_features_on_windows(root, file, w_len, overlap, band, target_name,fi
             window_metrics = OrderedDict()
             window_metrics['SUBJ'] = file[:5]
             # LZC METRICS
+            a, b, c, d, e, f, g = zip(
+                pool.map(KC_complexity_lempelziv_count, [numpy_to_str_sequence(median_bin(sliding_windows[w_i, :])),
+                                                          numpy_to_str_sequence(mean_bin(sliding_windows[w_i, :])),
+                                                          numpy_to_str_sequence(
+                                                              hilbert_envelop_bin(sliding_windows[w_i, :])),
+                                                          numpy_to_str_sequence(
+                                                              hilbert_power_bin(sliding_windows[w_i, :])),
+                                                          numpy_to_str_sequence(
+                                                              slope_sign_bin(sliding_windows[w_i, :])),
+                                                          numpy_to_str_sequence(
+                                                              slope_hilb_envelop_bin(sliding_windows[w_i, :])),
+                                                          numpy_to_str_sequence(
+                                                              slope_hilb_power_bin(sliding_windows[w_i, :]))]))
             #       Median
-            sequence = numpy_to_str_sequence(median_bin(sliding_windows[w_i, :]))
-            window_metrics['LZC_median_' + str(band)] = KC_complexity_lempelziv_count(sequence)
+            window_metrics['LZC_median_' + str(band)] = a
             #       Mean
-            sequence = numpy_to_str_sequence(mean_bin(sliding_windows[w_i, :]))
-            window_metrics['LZC_mean_' + str(band)] = KC_complexity_lempelziv_count(sequence)
+            window_metrics['LZC_mean_' + str(band)] = b
             #       Hilbert envelop
-            sequence = numpy_to_str_sequence(hilbert_envelop_bin(sliding_windows[w_i, :]))
-            window_metrics['LZC_H-env_' + str(band)] = KC_complexity_lempelziv_count(sequence)
+            window_metrics['LZC_H-env_' + str(band)] = c
             #       Hilbert power
-            sequence = numpy_to_str_sequence(hilbert_power_bin(sliding_windows[w_i, :]))
-            window_metrics['LZC_H-pow_' + str(band)] = KC_complexity_lempelziv_count(sequence)
+            window_metrics['LZC_H-pow_' + str(band)] = d
             #       Slope sign
-            sequence = numpy_to_str_sequence(slope_sign_bin(sliding_windows[w_i, :]))
-            window_metrics['LZC_slope_' + str(band)] = KC_complexity_lempelziv_count(sequence)
+            window_metrics['LZC_slope_' + str(band)] = e
             #       Slope Hilbert env
-            sequence = numpy_to_str_sequence(slope_hilb_envelop_bin(sliding_windows[w_i, :]))
-            window_metrics['LZC_slope_H-env_' + str(band)] = KC_complexity_lempelziv_count(sequence)
+            window_metrics['LZC_slope_H-env_' + str(band)] = f
             #       Slope Hilbert pow
-            sequence = numpy_to_str_sequence(slope_hilb_power_bin(sliding_windows[w_i, :]))
-            window_metrics['LZC_slope_H-pow_' + str(band)] = KC_complexity_lempelziv_count(sequence)
+            window_metrics['LZC_slope_H-pow_' + str(band)] = g
             # OTHERS
             window_metrics['mean_' + str(band)] = np.mean(sliding_windows[w_i, :])
             window_metrics['median_' + str(band)] = np.median(sliding_windows[w_i, :])
@@ -137,7 +154,7 @@ if __name__ == '__main__':
                          'SA010_day6_':83, 'SA010_day7_':77, 'SA010_day9_':74, 'SA010_day11':81, 'SA010_day12': 74,'SA010_day13':71,
                          'SA014_day1_':79, 'SA014_day2_':83, 'SA014_day3_':84, 'SA014_day5_':71, 'SA014_day6_':73,'SA014_day7_':81,
                          'SA014_day9_':117, 'SA017_day1_':89, 'SA017_day2_':76, 'SA017_day4_':74, 'SA017_day6_':74, 'SA017_day7_':75,
-                         'SA014_day8_':76, 'SA047_day1_': 96, 'SA047_day2_': 93, 'SA047_day3_': 84, 'SA047_day4_': 82, 'SA047_day5_': 85,
+                         'SA017_day8_':76, 'SA047_day1_': 96, 'SA047_day2_': 93, 'SA047_day3_': 84, 'SA047_day4_': 82, 'SA047_day5_': 85,
                          'SA047_day6_': 93, 'SA047_day7_': 98, 'SA047_day9_': 91, 'SA047_day13': 95}
                          # REVIEWED (check)
 
@@ -146,7 +163,7 @@ if __name__ == '__main__':
                          'SA010_day6_':35, 'SA010_day7_':33, 'SA010_day9_':30, 'SA010_day11':30, 'SA010_day12':28, 'SA010_day13':27,
                          'SA014_day1_':28, 'SA014_day2_':29, 'SA014_day3_':30, 'SA014_day5_':28, 'SA014_day6_':30, 'SA014_day7_':29,
                          'SA014_day9_':39, 'SA017_day1_': 26, 'SA017_day2_':25, 'SA017_day4_': 26, 'SA017_day6_':26, 'SA017_day7_': 26,
-                         'SA014_day8_': 27, 'SA047_day1_': 26, 'SA047_day2_': 21, 'SA047_day3_': 21, 'SA047_day4_': 20, 'SA047_day5_': 25,
+                         'SA017_day8_': 27, 'SA047_day1_': 26, 'SA047_day2_': 21, 'SA047_day3_': 21, 'SA047_day4_': 20, 'SA047_day5_': 25,
                          'SA047_day6_': 24, 'SA047_day7_': 27, 'SA047_day9_': 25, 'SA047_day13': 26}
                          # REVIEWED (check)
     target_name = 'PANSS'
@@ -159,6 +176,8 @@ if __name__ == '__main__':
     pool = multiprocessing.Pool(n_pools)
     n_w = 0
     all_windows_metrics_condensed = list()
+    n_windows_per_record = []
+    record_names = []
     for root, folders, _ in os.walk(directory):
         i = 0
         for fold_day in sorted(folders):
@@ -185,9 +204,16 @@ if __name__ == '__main__':
             for win_m in all_windows_all_bands_metrics[0]:
                 all_windows_metrics_condensed.append(win_m)
             n_w += n_windows
+            n_windows_per_record.append(n_windows)
+            record_names.append(fold_day)
 
     df_all_windows_metrics = pd.DataFrame(all_windows_metrics_condensed)
     print('A total of {} windows have been obtained.'.format(n_w))
     df_all_windows_metrics.to_csv(
         './{}_features_{}_{}.csv'.format(directory.split('/')[-1][:5], directory.split('/')[-1][6:],
                                                   str(w_len) + 'sec'))
+    with open('./{}_n_windows_{}_{}.txt'.format(directory.split('/')[-1][:5], directory.split('/')[-1][6:],
+                                                  str(w_len) + 'sec'), 'w') as f:
+        for i_ in range(len(n_windows_per_record)):
+            f.write('{},{}\n'.format(record_names[i_], n_windows_per_record[i_]))
+    f.close()

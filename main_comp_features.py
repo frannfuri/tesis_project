@@ -150,12 +150,14 @@ if __name__ == '__main__':
                          # REVIEWED (check)
     target_name = 'PANSS'
     target_name2 = 'PANSS_posit'
-    w_len = 0.5
+    w_len = 10
     overlap = 0.8
-    Alpha_features = False
+    Alpha_features = True
     ######################
     n_w = 0
     all_windows_metrics_condensed = list()
+    n_windows_per_record = []
+    record_names = []
     for root, folders, _ in os.walk(directory):
         i = 0
         for fold_day in sorted(folders):
@@ -182,9 +184,17 @@ if __name__ == '__main__':
             for win_m in all_windows_all_bands_metrics[0]:
                 all_windows_metrics_condensed.append(win_m)
             n_w += n_windows
+            n_windows_per_record.append(n_windows)
+            record_names.append(fold_day)
+
 
     df_all_windows_metrics = pd.DataFrame(all_windows_metrics_condensed)
     print('A total of {} windows have been obtained.'.format(n_w))
     df_all_windows_metrics.to_csv(
         './{}_features_{}_{}.csv'.format(directory.split('/')[-1][:5], directory.split('/')[-1][6:],
                                                   str(w_len) + 'sec'))
+    with open('./{}_n_windows_{}_{}.txt'.format(directory.split('/')[-1][:5], directory.split('/')[-1][6:],
+                                                  str(w_len) + 'sec'), 'w') as f:
+        for i_ in range(len(n_windows_per_record)):
+            f.write('{},{}\n'.format(record_names[i_], n_windows_per_record[i_]))
+    f.close()
