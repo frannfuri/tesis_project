@@ -2,8 +2,8 @@ import numpy as np
 import pandas as pd
 from utils import robust_z_score_norm
 
-df = pd.read_csv('/home/jack/cluster_results/whole_features_data_60sec_fixed.csv', index_col=0)
-path_n_windows = '/home/jack/cluster_results/n_windows/whole_n_windows_data_60sec.txt'
+df = pd.read_csv('/home/jack/cluster_results/whole_features_data_30sec_fixed.csv', index_col=0)
+path_n_windows = '/home/jack/cluster_results/n_windows/whole_n_windows_data_30sec.txt'
 directory_targets = '/home/jack/cluster_results/labels'
 
 df = df.drop(columns=['PANSS', 'PANSS_posit', 'IAF_post_chns','AlphaBand_high_bound','AlphaBand_low_bound', 'CoG_post_chns'])  # remove target columns, the specified
@@ -46,7 +46,7 @@ for rec in list_of_records:
     for c in range(1, df.shape[1] - 1):
         desv = np.std(df[df['record_ID'] == rec].iloc[:, c])
         all_feat_desvs.append(desv)
-    max_ids = np.argsort(all_feat_desvs)[:20]
+    max_ids = np.argsort(all_feat_desvs)[:20]  # IDs of the features with lower stds
     print('RECORD: {}'.format(rec))
     print('features with less desviation: {}'.format(df.keys()[max_ids]))
     if rec.startswith('SA007'):

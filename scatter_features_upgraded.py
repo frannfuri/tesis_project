@@ -8,14 +8,16 @@ import matplotlib.cm as cmx
 
 if __name__ == '__main__':
     feat1 = 'std_Alpha'
-    feat2 = 'std_Delta'
-    feat3 = 'std_Theta'
-    subj_name = 'SA007'
+    feat2 = 'std_Theta'
+    feat3 = 'std_Delta'
+    subj_name = 'SA047'
     discrim_f = 'deltaPANSS_posit'
     # Window length dependents
-    path_csv = '/home/jack/cluster_results/whole_features_data_60sec_fixed.csv'
-    path_n_windows = '/home/jack/cluster_results/n_windows/whole_n_windows_data_60sec.txt'
+    w_len=30
+    path_csv = '/home/jack/cluster_results/whole_features_data_30sec_fixed.csv'
+    path_n_windows = '/home/jack/cluster_results/n_windows/whole_n_windows_data_30sec.txt'
 
+    three_d = False
     directory_targets = '/home/jack/cluster_results/labels'
     colorsMap = 'inferno'
     ###################################
@@ -61,14 +63,22 @@ if __name__ == '__main__':
     cNorm = matplotlib.colors.Normalize(vmin=min(df['target'])-2, vmax=max(df['target'])+2)
     scalarMap = cmx.ScalarMappable(norm=cNorm, cmap=cm)
     fig = plt.figure()
-    ax = fig.add_subplot(projection='3d')
-    ax.scatter(df[feat1], df[feat2], df[feat3], c=scalarMap.to_rgba(df['target']))
+    if three_d:
+        ax = fig.add_subplot(projection='3d')
+        ax.scatter(df[feat1], df[feat2], df[feat3], c=scalarMap.to_rgba(df['target']))
+        ax.ticklabel_format(axis='z', style='sci', scilimits=(-1, 2))
+        ax.set_zlabel(feat3)
+    else:
+        ax = fig.add_subplot()
+        ax.scatter(df[feat1], df[feat2], c=scalarMap.to_rgba(df['target']))
+        ax.set_ylim((min(df[feat2])-0.05e-6, max(df[feat2])+0.05e-6))
+        ax.set_xlim((min(df[feat1])-0.05e-6, max(df[feat1])+0.05e-6))
+
     ax.ticklabel_format(axis='x', style='sci', scilimits=(-1, 2))
     ax.ticklabel_format(axis='y', style='sci', scilimits=(-1, 2))
-    ax.ticklabel_format(axis='z', style='sci', scilimits=(-1, 2))
     ax.set_xlabel(feat1)
     ax.set_ylabel(feat2)
-    ax.set_zlabel(feat3)
+    ax.set_title('{} [w_len={}sec]'.format(subj_name,w_len))
     scalarMap.set_array(df['target'])
     fig.colorbar(scalarMap, label=discrim_f)
     plt.show(block=False)

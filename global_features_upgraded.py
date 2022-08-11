@@ -11,12 +11,12 @@ def get_cmap(n, name='hsv'):
     return plt.cm.get_cmap(name, n)
 #['skew_Theta', 'kurt_Theta', 'skew_Delta', 'AlphaBand_low_bound', 'std_Alpha', 'kurt_Alpha']
 if __name__=='__main__':
-    f_analysis = 'MAD_Delta'
-    subj_name = 'SA007'
+    f_analysis = 'LZC_slope_H-pow_Complete'
+    subj_name = 'SA047'
     discrim_f = 'deltaPANSS_posit'
     # Window length dependents
-    path_csv = '/home/jack/cluster_results/whole_features_data_60sec_fixed.csv'
-    path_n_windows = '/home/jack/cluster_results/n_windows/whole_n_windows_data_60sec.txt'
+    path_csv = '/home/jack/cluster_results/whole_features_data_30sec_fixed.csv'
+    path_n_windows = '/home/jack/cluster_results/n_windows/whole_n_windows_data_30sec.txt'
 
     directory_targets = '/home/jack/cluster_results/labels'
     n_bins = 25 # for the histogram
@@ -72,18 +72,22 @@ if __name__=='__main__':
         xs.append(np.random.normal(i + 1, 0.04,
                                    df_features[f_analysis][df_features['record_ID'] == list_of_records[i]].values.shape[0]))
     plt.figure(figsize=(13,5))
-    plt.boxplot(vals, labels=names)
+    plt.boxplot(vals, labels=names, vert=False)
     plt.grid()
     cmap = get_cmap(len(vals))
     colors_ = []
     for i in range(len(vals)):
         colors_.append(cmap(i))
     for x, val, c in zip(xs, vals, colors_):
-        plt.scatter(x, val, alpha=0.4, color=c)
-    plt.ylabel(f_analysis)
+        plt.scatter(val, x, alpha=0.4, color=c)
+    plt.xlabel(f_analysis)
+    plt.ylabel(r'$\Delta$ {}'.format(discrim_f[5:]))
+    plt.ticklabel_format(axis='x', style='sci', scilimits=(-1, 2))
     plt.title('{} {} [w_len={}]\ntarget_feature: {}'.format(f_analysis, subj_name, path_csv[-16:-10], discrim_f))
     plt.tight_layout()
+    plt.show()
 
+    '''
     fig, axs = plt.subplots(int(np.ceil(len(list_of_records) / 3)), 3, figsize=(15, 15))
     ax_n = 0
     fig.suptitle(
@@ -123,5 +127,6 @@ if __name__=='__main__':
                 #if np.abs(normed_features[row]) > 3.5:
                 if df_features[df_features['record_ID']==rec].iloc[row, col] < loval or df_features[df_features['record_ID']==rec].iloc[row,col] > hival:
                     ids_to_remove.append(df_features[df_features['record_ID']==rec].iloc[row].name)
+    '''
     a = 0
 

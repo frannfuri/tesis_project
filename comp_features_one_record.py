@@ -30,7 +30,7 @@ if __name__ == '__main__':
                     if f.endswith(format_type):
                         band = f[-9:-4]
                         if band == 'plete':
-                            band == 'Complete'
+                            band = 'Complete'
                         print('==============================Processing band ' + str(band) + '==============================')
                         new_raw = mne.io.read_raw_eeglab(os.path.join(root_day, f), preload=True)
                         new_raw_data_Cz = new_raw._data[8,:]
