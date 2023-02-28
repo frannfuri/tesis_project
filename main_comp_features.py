@@ -126,7 +126,7 @@ def compute_features_on_windows(root, file, w_len, overlap, band, target_name,fi
 
 if __name__ == '__main__':
     ##### PARAMETERS #####
-    directory = './datasets/whole_data'
+    directory = '../datasets_per_band/train_subjs'
     fromat_type = 'set'
     target_name = 'real_and_pred_SAPS'
     w_len = 40
@@ -147,10 +147,13 @@ if __name__ == '__main__':
     n_windows_per_record = []
     record_names = []
     for root, folders, _ in os.walk(directory):
-        i = 0
+        #i = 0
+        f_ = 0
+        n_folders = len(folders)
         for fold_day in sorted(folders):
             print('==============================Processing record of ' + str(fold_day[:11]) + '==============================')
-            i += 1
+            #i += 1
+            f_ += 1
             file_label_ = all_targets_info[fold_day[:11]]
             all_windows_all_bands_metrics = list()  # len of 5 (Alpha(19),  Complete(7), Delta(15), Theta(15), Gamma(5))
             #############################
@@ -162,7 +165,8 @@ if __name__ == '__main__':
                         one_band_windows_metrics, n_windows = compute_features_on_windows(root_day, file, w_len, overlap, file[-9:-4],
                                                                                           target_name, file_label_)
                         all_windows_all_bands_metrics.append(one_band_windows_metrics)
-            print('{} windows generated for {}.'.format(n_windows, fold_day[6:11]))
+                        print('Band {} --> ready.'.format(file[-9:-4]))
+            print('{} windows generated for {}.'.format(n_windows, fold_day[:11]))
             for j in range(n_windows):
                 all_windows_all_bands_metrics[0][j].update(all_windows_all_bands_metrics[1][j])
                 all_windows_all_bands_metrics[0][j].update(all_windows_all_bands_metrics[2][j])
@@ -173,6 +177,7 @@ if __name__ == '__main__':
             n_w += n_windows
             n_windows_per_record.append(n_windows)
             record_names.append(fold_day)
+            print('Processed {} folders from a total of {} folders.'.format(f_, n_folders))
 
 
     df_all_windows_metrics = pd.DataFrame(all_windows_metrics_condensed)
